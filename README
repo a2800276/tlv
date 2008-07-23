@@ -1,0 +1,38 @@
+= tlv -- lib to facilitate working with tlv data
+   
+
+== Installing
+
+Having a "Installing" section is a bit of a chicken or egg question.
+Someone reading this README has, in all likelyhood already installed the
+package. 
+
+ You can install the +tlv+ package by executing:
+
+	gem install tlv -r
+
+alternatively, you can download +.tar.gz+ or +.zip+ archives from 
+Rubyforge[http://rubyforge.org/frs/?group_id=2203].
+
+
+== Mail
+
+In case you discover bugs, spelling errors, offer suggestions for
+improvements or would like to help out with the project, you can contact
+me directly (tim@kuriositaet.de).	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+=
