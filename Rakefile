@@ -18,7 +18,7 @@ RUBYFORGE_USER	='a2800276'
 # Specifies the default task to execute. This is often the "test" task
 # and we'll change things around as soon as we have some tests.
 
-task  :default => [:rdoc]
+task  :default => [:test]
 
 # The directory to generate +rdoc+ in.
 RDOC_DIR="doc/html"
