@@ -6,12 +6,17 @@ class TLV
 
   end
 
+  def b2s bytestr
+          r = bytestr.unpack("H*")[0]
+          r.length > 1 ? r : "  "
+  end
+
   class Field
-    attr_accessor :desc, :name, :length
+    attr_accessor :display_name, :name, :length
     def initialize len, desc, name
       @length=len
-      @desc = desc
       @name = name
+      @display_name = desc
     end
   end
 #
@@ -25,6 +30,22 @@ class TLV
 #  end
 #
   class B < Field
+    def define_accessor clazz
+      name = @name
+      len  = @length 
+      clazz.instance_eval{
+        define_method("#{name}="){|val|
+          raise("invalid value nil")        unless val
+          raise("must be a String #{val}")  unless val.is_a?(String)
+          raise("incorrect length: #{val}") unless (val.length*8) <= len
+          self.instance_variable_set("@#{name}", val)
+        }
+        
+        define_method("#{name}") {
+          self.instance_variable_get("@#{name}") || "\x00" * (len/8) 
+        }
+      }
+    end
   end
 #
 #  class CN < Field
@@ -45,35 +66,36 @@ class TLV
 
     def b len, desc, name
       raise "invalid len #{len}" unless (len%8 == 0)
+      field = B.new(len, desc, name)
+      field.define_accessor(self)
       fields << B.new(len, desc, name)
       
-      define_method("#{name}="){|val|
-        raise("invalid value nil")        unless val
-        raise("must be a String #{val}")  unless val.is_a?(String)
-        raise("incorrect length: #{val}") unless (val.length*8) <= len
-        self.instance_variable_set("@#{name}", val)
-      }
-      
-      define_method("#{name}") {
-        self.instance_variable_get("@#{name}") || "\x00" * (len/8) 
-      }
     end
   end
 
   def to_s
     longest = 0
-    self.class.fields.each { |field|
-      longest = field.desc.length if field.desc.length > longest
+    fields.each { |field|
+      longest = field.display_name.length if field.display_name.length > longest
     }
     fmt = "%#{longest}s : %s\n"
     str = ""
-    self.class.fields.each { |field|
-      
+    fields.each { |field|
+      str << (fmt % [field.display_name, b2s(self.send(field.name))])
     }
+    str
   end
 
   def to_b
-    
+    bytes = ""
+    fields.each { |field|
+      bytes << self.send(field.name)
+    }
+    bytes 
+  end
+
+  def fields
+    self.class.fields
   end
 end
 
