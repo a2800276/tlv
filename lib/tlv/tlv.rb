@@ -72,7 +72,10 @@ class TLV
       longest = field.display_name.length if field.display_name.length > longest
     }
     fmt = "%#{longest}s : %s\n"
-    str = "#{self.class.description} (0x#{TLV.b2s(tag)})\n"
+    str = "#{self.class.description}"
+    str = " (0x#{TLV.b2s(tag)})\n" if tag
+    str << "\n"
+
     str << "-" * (str.length-1) << "\n"
     fields.each { |field|
       str << (fmt % [field.display_name, TLV.b2s(self.send(field.name))])
