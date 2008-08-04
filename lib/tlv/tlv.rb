@@ -15,8 +15,7 @@ class TLV
     string = string.gsub(/\s+/, "")
     [string].pack("H*") 
   end
-
-
+  
   class Field
     attr_accessor :display_name, :name, :length
     def initialize len, desc, name
@@ -50,9 +49,13 @@ class TLV
     attr_accessor :description
     def tlv tag, description
       @tag = TLV.s2b(tag)
+      def @tag.& flag
+        self[0] & flag
+      end
       @description = description
       TLV.register @tag, self
     end
+
     def fields
       @fields ||= (self == TLV ? [] : superclass.fields.dup) 
     end
