@@ -22,7 +22,11 @@ class << self
     ((@tag & CLASS_MASK) == PRIVATE) if @tag
   end
   def primitive?
-    ((@tag & BYTE6) == 0x00) if @tag
+    if @tag
+      ((@tag & BYTE6) == 0x00) 
+    else
+      true # `tagless` datastructs are by default primitive
+    end
   end
   def constructed?
     ((@tag & BYTE6) == BYTE6) if @tag

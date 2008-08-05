@@ -37,14 +37,19 @@ class TLV
   end
 
   def initialize bytes=nil
-    return unless bytes
+    parse(bytes) if bytes
+  end
+
+  def parse bytes
+
     tag, rest = TLV.get_tag(bytes)
     length, bytes = TLV.get_length(rest)
-
-    fields.each { |field|
-      bytes = field.parse(self, bytes, length)    
-    } if fields
-
+    
+    if self.class.primitive?
+      fields.each { |field|
+        bytes = field.parse(self, bytes, length)    
+      } if fields
+    end
   end
 
 

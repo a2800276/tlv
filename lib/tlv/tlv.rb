@@ -1,6 +1,6 @@
 
 
-class TLV
+class TLV 
 
   def self.register tag, clazz
     @tlv_classes ||= {}
@@ -35,14 +35,18 @@ class TLV
   
   class << self
     attr_accessor :tag
-    attr_accessor :description
-    def tlv tag, description
+    attr_accessor :display_name
+    # If this TLV is placed into another as a subfield, this will be 
+    # the name of the accessor, default is the rubyfied display_name
+    attr_accessor :accessor_name
+    def tlv tag, display_name, accessor_name=nil
       @tag = TLV.s2b(tag)
       def @tag.& flag
         self[0] & flag
       end
       check_tag
-      @description = description
+      @display_name = display_name
+      @accessor_name = accessor_name || rubify_a(display_name)
       TLV.register @tag, self
     end
 
@@ -58,16 +62,20 @@ class TLV
     def raw desc=nil, name=nil
       fields << Raw.new(self, desc, name)
     end
-  end
 
+    # for constructed tlv's, add subtags that must be present
+  end
+  def display_name
+     self.class.display_name
+  end
   def to_s
     longest = 0
     fields.each { |field|
       longest = field.display_name.length if field.display_name.length > longest
     }
     fmt = "%#{longest}s : %s\n"
-    str = "#{self.class.description}"
-    str = " (0x#{TLV.b2s(tag)})\n" if tag
+    str = "#{display_name}"
+    str << " (0x#{TLV.b2s(tag)})" if tag
     str << "\n"
 
     str << "-" * (str.length-1) << "\n"
@@ -83,13 +91,27 @@ class TLV
       bytes << self.send(field.name)
     }
 
+    mandatory.each {|t|
+      bytes << self.send(t.accessor_name).to_b
+    }
+
     raise "not yet implemented" if bytes.length > 255
-    bytes.insert 0, [bytes.length].pack("C*")
-    bytes.insert 0, tag
+    if tag
+      bytes.insert 0, [bytes.length].pack("C*")
+      bytes.insert 0, tag
+    end
+    bytes
   end
 
   def fields
     self.class.fields
+  end
+
+  def mandatory
+    self.class.mand_tags
+  end
+  def optional
+    self.class.opt_tags
   end
 
   def tag

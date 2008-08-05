@@ -22,26 +22,37 @@ class TestTLV < Test::Unit::TestCase
     tlv "9F7F", "Test Raw"
     raw
   end
+  class TLVTestNoTag < TLV
+    b   8,   "first field",  :first
+    b   8,   "second field", :second
+  end
+
+  def basics tlv
+    tlv.first="\x01"
+    tlv.second="\xAA"
+    assert_equal "\x01", tlv.first
+    assert_equal "\xaa", tlv.second
+
+    assert_raise(RuntimeError) {
+      tlv.first="\x02\x03"
+    }
+    assert_raise(RuntimeError) {
+      tlv.first=Time.new
+    }
+    assert_raise(RuntimeError) {
+      tlv.second=1
+    }
+  end
 
   def test_basics
     t = TLVTest.new
-    t.first="\x01"
-    t.second="\xAA"
-    assert_equal "\x01", t.first
-    assert_equal "\xaa", t.second
+    basics t
     assert_equal "\x11\x02\x01\xaa", t.to_b
-
-    assert_raise(RuntimeError) {
-      t.first="\x02\x03"
-    }
-    assert_raise(RuntimeError) {
-      t.first=Time.new
-    }
-    assert_raise(RuntimeError) {
-      t.second=1
-    }
     puts t.to_s
-    assert true
+
+    t = TLVTestNoTag.new
+    basics t
+    assert_equal "\x01\xaa", t.to_b
   end 
 
   def test_parse_tag
@@ -125,8 +136,8 @@ class TestTLV < Test::Unit::TestCase
     t = TLVTest3.new
     #puts t.methods.sort
     t.value= "bumsi"
+    assert_equal "Test Raw", TLVTest3.display_name
     assert_equal "bumsi", t.value
-    puts t
     bytes =  t.to_b
     t = TLV.parse bytes
     assert_equal "bumsi", t.value
