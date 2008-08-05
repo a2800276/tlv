@@ -12,6 +12,17 @@ class TestTLV < Test::Unit::TestCase
     b   8,   "second field", :second
   end
 
+  class TLVTest2 < TLV
+    tlv "32", "Test Rubify"
+    b   8,   "My Test"
+    b   8,   "Oh M@i!"
+  end
+
+  class TLVTest3 < TLV
+    tlv "9F7F", "Test Raw"
+    raw
+  end
+
   def test_basics
     t = TLVTest.new
     t.first="\x01"
@@ -54,6 +65,7 @@ class TestTLV < Test::Unit::TestCase
     tag, rest = TLV.get_tag bytes
     assert_equal "\x11", tag
     assert_equal "\x02\x01\xaa", rest
+
   end
   def test_parse_length
     bytes = "\x03\x02"
@@ -97,10 +109,29 @@ class TestTLV < Test::Unit::TestCase
     
     assert "\x01", t.first
     bytes = t.to_b
-
     t = TLV.parse bytes
     assert_equal TLVTest, t.class
     assert_equal "\x01", t.first
     assert_equal "\xAA", t.second
   end
+  def test_rubify
+    t = TLVTest2.new
+    t.my_test = "\x01"
+    assert_equal "\x01", t.my_test
+    t.oh_mi = "\x02"
+    assert_equal "\x02", t.oh_mi
+  end
+  def test_raw
+    t = TLVTest3.new
+    #puts t.methods.sort
+    t.value= "bumsi"
+    assert_equal "bumsi", t.value
+    puts t
+    bytes =  t.to_b
+    t = TLV.parse bytes
+    assert_equal "bumsi", t.value
+    assert_equal TLVTest3, t.class
+  end
+
+
 end

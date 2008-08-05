@@ -19,7 +19,7 @@ class TLV
       }
     end
 
-    def parse tlv, bytes
+    def parse tlv, bytes, _len
       val  = bytes[0, length/8]
       rest = bytes[length/8, bytes.length]
       # check val...

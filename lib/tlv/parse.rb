@@ -4,7 +4,7 @@ class TLV
     tag, rest = get_tag bytes
     length, rest = get_length rest
     impl = @tlv_classes[tag]
-    impl.new rest 
+    impl.new bytes 
     
   end
 
@@ -38,9 +38,12 @@ class TLV
 
   def initialize bytes=nil
     return unless bytes
+    tag, rest = TLV.get_tag(bytes)
+    length, bytes = TLV.get_length(rest)
+
     fields.each { |field|
-            bytes = field.parse self, bytes    
-    }
+      bytes = field.parse(self, bytes, length)    
+    } if fields
 
   end
 

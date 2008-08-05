@@ -16,17 +16,6 @@ class TLV
     [string].pack("H*") 
   end
   
-  class Field
-    attr_accessor :display_name, :name, :length
-    def initialize len, desc, name
-      @length=len
-      @name = name
-      @display_name = desc
-    end
-    def parse tlv, bytes
-      raise "not implemented! use subclass"
-    end
-  end
 #
 #  class A < Field
 #  end
@@ -52,6 +41,7 @@ class TLV
       def @tag.& flag
         self[0] & flag
       end
+      check_tag
       @description = description
       TLV.register @tag, self
     end
@@ -60,12 +50,13 @@ class TLV
       @fields ||= (self == TLV ? [] : superclass.fields.dup) 
     end
 
-    def b len, desc, name
+    def b len, desc, name=nil
       raise "invalid len #{len}" unless (len%8 == 0)
-      field = B.new(len, desc, name)
-      field.define_accessor(self)
-      fields << B.new(len, desc, name)
-      
+      fields << B.new(self, desc, name, len)
+    end
+    
+    def raw desc=nil, name=nil
+      fields << Raw.new(self, desc, name)
     end
   end
 
