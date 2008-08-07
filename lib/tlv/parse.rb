@@ -2,9 +2,8 @@ class TLV
   # return [tlv, rest], the parsed TLV and any leftover bytes.
   def self.parse bytes
     return nil unless bytes && bytes.length>0
-    tag, rest = get_tag bytes
-    length, rest = get_length rest
-    impl = @tlv_classes[tag]
+    tag, _ = get_tag bytes
+    impl = lookup(tag)
     tlv = impl.new 
     rest = tlv.parse(bytes)
     [tlv, rest]
@@ -48,26 +47,33 @@ class TLV
       tag, rest = TLV.get_tag(bytes)
       length, bytes = TLV.get_length(rest)
     end
+    
     if self.class.primitive?
-      fields.each { |field|
-        bytes = field.parse(self, bytes, length)    
-      } if fields
+      bytes = parse_fields bytes, length
     else
-      while bytes
-        tlv, bytes = TLV.parse bytes 
-        begin
-
-        self.send("#{tlv.class.accessor_name}=", tlv)  
-        rescue
-          puts $!
-          puts tlv.class
-          puts tlv.methods.sort
-        end
-      end
+      bytes = parse_tlv bytes, length
     end
 
     bytes
 
+  end
+
+  def parse_tlv bytes, length
+    b = bytes[0,length]
+    rest = bytes[length, bytes.length]
+
+    while b && b.length != 0
+      tlv, b = self.class.parse(b)
+      self.send("#{tlv.class.accessor_name}=", tlv)
+    end
+
+    rest
+  end
+  def parse_fields bytes, length
+    fields.each { |field|
+      bytes = field.parse(self, bytes, length)    
+    } if fields
+    bytes
   end
 
 

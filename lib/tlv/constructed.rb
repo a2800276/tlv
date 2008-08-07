@@ -24,6 +24,24 @@ class TLV
     def optional tlv, accessor_name=nil
       handle_subtag opt_tags, tlv, accessor_name
     end
+    
+    def register tlv
+      @tlv_classes ||= {}
+      warn "tag #{TLV.b2s(tlv.tag)} already defined!" if @tlv_classes[tlv.tag]
+      @tlv_classes[tlv.tag] = tlv
+    end
+
+    def lookup tag
+      return self if tag == self.tag
+      @tlv_classes ||= {}
+      tlv = @tlv_classes[tag]
+      if !tlv && ! (self == TLV)
+        warn "looking up tag #{TLV.b2s(tag)} in super!"
+        raise "bla"
+        tlv ||= super
+      end
+      tlv
+    end
 
     # internal, common functionality for mndatory and optional
     def handle_subtag arr, tlv, accessor_name
@@ -34,6 +52,7 @@ class TLV
         tlv.accessor_name= accessor_name
       end
       define_accessor(tlv.accessor_name)
+      register(tlv)
       arr << tlv
     end
 

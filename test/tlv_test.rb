@@ -111,6 +111,36 @@ class TestTLV < Test::Unit::TestCase
     assert_equal "\x11\x22", rest
   end
 
+  def test_length
+    t = TLVTest3.new
+    t.value = ""
+    assert_equal "\x00", t.to_b[2,1]
+    t.value = "1"
+    assert_equal "\x01\x31", t.to_b[2,2]
+    t.value = "1"*127
+    assert_equal "\x7F\x31", t.to_b[2,2]
+    t.value = "1"*128
+    assert_equal "\x81\x80\x31", t.to_b[2,3]
+    t.value = "1"*255
+    assert_equal "\x81\xFF\x31", t.to_b[2,3]
+    t.value = "1"*256
+    assert_equal "\x82\x01\x00\x31", t.to_b[2,4]
+    t.value = "1"*65535
+    assert_equal "\x82\xFF\xFF\x31", t.to_b[2,4]
+    t.value = "1"*65536
+    assert_equal "\x84\x00\x01\x00\x00\x31", t.to_b[2,6]
+    
+    o = Object.new
+    def o.length
+      return 4294967296
+    end
+    
+    assert_raises (RuntimeError) {
+      t.value=o
+      t.to_b
+    }
+  end
+
   def test_parse
     t = TLVTest.new
     assert_equal "\x00", t.first

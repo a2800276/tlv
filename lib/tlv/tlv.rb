@@ -2,10 +2,10 @@
 
 class TLV 
 
-  def self.register tag, clazz
-    @tlv_classes ||= {}
-    @tlv_classes[tag] = clazz
-  end
+#  def self.register tag, clazz
+#    @tlv_classes ||= {}
+#    @tlv_classes[tag] = clazz
+#  end
 
   def self.b2s bytestr
     r = bytestr.unpack("H*")[0]
@@ -15,6 +15,11 @@ class TLV
     string = string.gsub(/\s+/, "")
     [string].pack("H*") 
   end
+
+  def self.warn mes
+    STDERR.puts "[warn] #{mes}"
+  end
+          
   
 #
 #  class A < Field
@@ -47,8 +52,10 @@ class TLV
       check_tag
       @display_name = display_name
       @accessor_name = accessor_name || rubify_a(display_name)
-      TLV.register @tag, self
+      TLV.register self
     end
+    
+    
 
     def fields
       @fields ||= (self == TLV ? [] : superclass.fields.dup) 
@@ -64,7 +71,8 @@ class TLV
     end
 
     # for constructed tlv's, add subtags that must be present
-  end
+  end # meta class thingie
+
   def display_name
      self.class.display_name
   end
@@ -82,8 +90,7 @@ class TLV
     fields.each { |field|
       str << (fmt % [field.display_name, TLV.b2s(self.send(field.name))])
     }
-
-    mandatory.each { |tlv_class|
+    (mandatory+optional).each { |tlv_class|
       temp_tlv = self.send(tlv_class.accessor_name)
       temp = temp_tlv.to_s
       temp.gsub!(/^/, "  ")
@@ -92,23 +99,6 @@ class TLV
     str
   end
 
-  def to_b
-    bytes = ""
-    fields.each { |field|
-      bytes << self.send(field.name)
-    }
-
-    mandatory.each {|t|
-      bytes << self.send(t.accessor_name).to_b
-    }
-
-    raise "not yet implemented" if bytes.length > 255
-    if tag
-      bytes.insert 0, [bytes.length].pack("C*")
-      bytes.insert 0, tag
-    end
-    bytes
-  end
 
   def fields
     self.class.fields
