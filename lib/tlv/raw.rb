@@ -5,6 +5,7 @@ class TLV
       super
     end
     def define_accessor clazz
+      super
       name = @name
       clazz.instance_eval{
         define_method("#{name}="){|val|

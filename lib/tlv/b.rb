@@ -3,6 +3,7 @@
 class TLV
  class B < Field
     def define_accessor clazz
+      super
       name = @name
       len  = @length 
       clazz.instance_eval{
