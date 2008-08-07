@@ -1,28 +1,28 @@
 require 'test/unit'
 require File.dirname(__FILE__) + '/../lib/tlv'
 
-class TestTLV < Test::Unit::TestCase
+class TestDGI < Test::Unit::TestCase
 
   def setup
   end
   
-  class TLVTest < TLV
-    tlv "11", "Test TLV"
+  class TLVTest < DGI
+    tlv "01", "Test TLV"
     b   8,   "first field",  :first
     b   8,   "second field", :second
   end
 
-  class TLVTest2 < TLV
-    tlv "42", "Test Rubify"
+  class TLVTest2 < DGI
+    tlv "02", "Test Rubify"
     b   8,   "My Test"
     b   8,   "Oh M@i!"
   end
 
-  class TLVTest3 < TLV
-    tlv "9F7F", "Test Raw"
+  class TLVTest3 < DGI
+    tlv "9F00", "Test Raw"
     raw
   end
-  class TLVTestNoTag < TLV
+  class TLVTestNoTag < DGI
     b   8,   "first field",  :first
     b   8,   "second field", :second
   end
@@ -47,7 +47,7 @@ class TestTLV < Test::Unit::TestCase
   def test_basics
     t = TLVTest.new
     basics t
-    assert_equal "\x11\x02\x01\xaa", t.to_b
+    assert_equal "\x01\x02\x01\xaa", t.to_b
 
     t = TLVTestNoTag.new
     basics t
@@ -130,15 +130,16 @@ class TestTLV < Test::Unit::TestCase
     t.value = "1"*127
     assert_equal "\x7F\x31", t.to_b[2,2]
     t.value = "1"*128
-    assert_equal "\x81\x80\x31", t.to_b[2,3]
+    assert_equal "\x80\x31", t.to_b[2,2]
     t.value = "1"*255
-    assert_equal "\x81\xFF\x31", t.to_b[2,3]
+    assert_equal "\xFf\x00\xff\x31", t.to_b[2,4]
     t.value = "1"*256
-    assert_equal "\x82\x01\x00\x31", t.to_b[2,4]
-    t.value = "1"*65535
-    assert_equal "\x82\xFF\xFF\x31", t.to_b[2,4]
-    t.value = "1"*65536
-    assert_equal "\x84\x00\x01\x00\x00\x31", t.to_b[2,6]
+    assert_equal "\xFF\x01\x00\x31", t.to_b[2,4]
+    
+    assert_raises (RuntimeError) {
+      t.value = "1"*65535
+      assert_equal "\x82\xFF\xFF\x31", t.to_b[2,4]
+    }
     
     o = Object.new
     def o.length
@@ -159,7 +160,7 @@ class TestTLV < Test::Unit::TestCase
     
     assert "\x01", t.first
     bytes = t.to_b
-    t, rest = TLV.parse bytes
+    t, rest = TLVTest.parse bytes
     assert_equal TLVTest, t.class
     assert_equal "\x01", t.first
     assert_equal "\xAA", t.second
@@ -178,7 +179,7 @@ class TestTLV < Test::Unit::TestCase
     assert_equal "Test Raw", TLVTest3.display_name
     assert_equal "bumsi", t.value
     bytes =  t.to_b
-    t, rest = TLV.parse bytes
+    t, rest = TLVTest3.parse bytes
     assert_equal "bumsi", t.value
     assert_equal TLVTest3, t.class
   end

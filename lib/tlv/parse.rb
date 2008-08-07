@@ -45,7 +45,7 @@ class TLV
   def parse bytes
     if tag
       tag, rest = TLV.get_tag(bytes)
-      length, bytes = TLV.get_length(rest)
+      length, bytes = self.class.get_length(rest)
     end
     
     if self.class.primitive?
