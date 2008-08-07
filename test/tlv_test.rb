@@ -13,7 +13,7 @@ class TestTLV < Test::Unit::TestCase
   end
 
   class TLVTest2 < TLV
-    tlv "32", "Test Rubify"
+    tlv "42", "Test Rubify"
     b   8,   "My Test"
     b   8,   "Oh M@i!"
   end
@@ -48,7 +48,6 @@ class TestTLV < Test::Unit::TestCase
     t = TLVTest.new
     basics t
     assert_equal "\x11\x02\x01\xaa", t.to_b
-    puts t.to_s
 
     t = TLVTestNoTag.new
     basics t
@@ -120,7 +119,7 @@ class TestTLV < Test::Unit::TestCase
     
     assert "\x01", t.first
     bytes = t.to_b
-    t = TLV.parse bytes
+    t, rest = TLV.parse bytes
     assert_equal TLVTest, t.class
     assert_equal "\x01", t.first
     assert_equal "\xAA", t.second
@@ -139,7 +138,7 @@ class TestTLV < Test::Unit::TestCase
     assert_equal "Test Raw", TLVTest3.display_name
     assert_equal "bumsi", t.value
     bytes =  t.to_b
-    t = TLV.parse bytes
+    t, rest = TLV.parse bytes
     assert_equal "bumsi", t.value
     assert_equal TLVTest3, t.class
   end

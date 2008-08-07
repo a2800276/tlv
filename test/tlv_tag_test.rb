@@ -7,7 +7,7 @@ class TestTLVTag < Test::Unit::TestCase
   end
   
   class TLVTagTest < TLV
-    tlv "31", "Test TLV"
+    tlv "41", "Test TLV"
     b   8,   "first field",  :first
     b   8,   "second field", :second
   end
