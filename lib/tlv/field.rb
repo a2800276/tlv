@@ -16,7 +16,7 @@ class Field
     raise "not implemented! use subclass"
   end
   def define_accessor clazz
-    raise "Not primitive: #{clazz.to_s}, TAG=#{TLV.b2s clazz.tag}" unless clazz.primitive?
+    #raise "Not primitive: #{clazz.to_s}, TAG=#{TLV.b2s clazz.tag}" unless clazz.primitive?
   end
 end
 end

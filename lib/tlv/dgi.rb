@@ -1,5 +1,6 @@
 
 class DGI < TLV
+
   def self.get_length(bytes)
     len = bytes[0]  #CPS 2.2 Creation of ...
     if len == 0xFF
@@ -10,6 +11,17 @@ class DGI < TLV
     [len, rest]
   end
 
+  def self.check_tag
+    raise "incorrect tag length, dgi must be 2" unless tag.length==2
+  end
+
+  def self.get_tag bytes
+          puts "HERE!!!"
+    tag = bytes[0,2]
+    rest = bytes [2,bytes.length]
+    [tag, rest]
+  end
+
   def get_len_bytes len
     bytes = case len
             when 0..0xfe : "" << len
@@ -18,4 +30,11 @@ class DGI < TLV
                     raise "Don't be silly"
             end
   end
+
+  class << self
+    
+    def primitive?
+      false
+    end
+  end 
 end
