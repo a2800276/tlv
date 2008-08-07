@@ -82,6 +82,13 @@ class TLV
     fields.each { |field|
       str << (fmt % [field.display_name, TLV.b2s(self.send(field.name))])
     }
+
+    mandatory.each { |tlv_class|
+      temp_tlv = self.send(tlv_class.accessor_name)
+      temp = temp_tlv.to_s
+      temp.gsub!(/^/, "  ")
+      str << temp
+    }
     str
   end
 
