@@ -59,14 +59,14 @@ class TestTLVConstructed < Test::Unit::TestCase
 
     bytes = t3.to_b
     puts TLV.b2s(bytes)
-    t, rest = TLVTestCons.parse bytes*2
+    t, rest = TLVTestCons._parse bytes*2
     assert_equal bytes, rest
     puts t
     assert_equal "\x01", t.tlv_tag_test.first
     assert_equal "\x02", t.tlv_tag_test.second
     assert_equal "\x34\x56", t.another_test.value
 
-    t, rest = TLV.parse rest
+    t, rest = TLV._parse rest
     assert_equal "\x01", t.tlv_tag_test.first
     assert_equal "\x02", t.tlv_tag_test.second
     assert_equal "\x34\x56", t.another_test.value

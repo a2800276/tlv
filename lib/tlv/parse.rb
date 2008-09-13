@@ -1,6 +1,11 @@
 class TLV
   # return [tlv, rest], the parsed TLV and any leftover bytes.
   def self.parse bytes
+    tlv, _ = self._parse bytes
+    return tlv
+  end
+
+  def self._parse bytes
     return nil unless bytes && bytes.length>0
     tag, _ = self.get_tag bytes
     impl = lookup(tag)
