@@ -24,6 +24,14 @@ class TestTLVConstructed < Test::Unit::TestCase
     optional :tag => "43",
              :display_name => "Another Test"
   end
+
+  class DGITest < DGI
+    tlv "9102", "Random Test Data"
+    mandatory TLVTagTest, :test
+    optional :tag => "43",
+             :display_name => "Another Test"
+  end
+
   def basics t
     assert(t.methods.include?("tlv_tag_test" ))
     assert(t.methods.include?("tlv_tag_test="))
@@ -84,6 +92,17 @@ class TestTLVConstructed < Test::Unit::TestCase
     
     assert_equal(TLV.s2b("32084102010243023456"), t2.to_b)
 
+  end
+
+  def test_const_dgi
+    te  = TLVTagTest.new
+    te.first=  "\x01"
+    te.second= "\x02"
+    dgi = DGITest.new
+    dgi.test= te
+    dgi.another_test="\x34\x56"
+
+    assert_equal(TLV.s2b("9102084102010243023456"), dgi.to_b)
   end
   
 

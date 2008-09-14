@@ -48,7 +48,7 @@ class TLV
 
   def to_b
     bytes = ""
-    if self.class.primitive?  || (self.is_a?(DGI) && fields)
+    if self.class.primitive?  || (self.is_a?(DGI) && fields.length!=0)
       bytes = get_bytes_primitive
     else
       bytes = get_bytes_constructed
