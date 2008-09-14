@@ -72,6 +72,19 @@ class TestTLVConstructed < Test::Unit::TestCase
     assert_equal "\x34\x56", t.another_test.value
     puts t
   end 
+
+  def test_const_direct_value
+    t = TLVTagTest.new
+    t.first  = "\x01"
+    t.second = "\x02"
+    
+    t2 = TLVTestCons.new
+    t2.tlv_tag_test=t
+    t2.another_test="\x34\x56"
+    
+    assert_equal(TLV.s2b("32084102010243023456"), t2.to_b)
+
+  end
   
 
 end

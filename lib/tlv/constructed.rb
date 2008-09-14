@@ -51,7 +51,8 @@ class TLV
         tlv= tlv.dup
         tlv.accessor_name= accessor_name
       end
-      define_accessor(tlv.accessor_name)
+      define_accessor(tlv)
+      
       register(tlv)
       arr << tlv
     end
@@ -74,20 +75,40 @@ class TLV
     def rubify_c display
       name = display.gsub(/\s+/, "")
     end
+    
+    def define_accessor tlv_class
+      s = tlv_class
+      # check we are actually creating an accessor for an TLV
+      while s = s.superclass
+        break if s == TLV
+      end      
+      raise "not a TLV class!" unless s
 
-    def define_accessor name
-      if name.is_a? TLV
-        name = name.class.to_s.gsub(/.*::/, "")        
-      end
+      # determine the accessor name
+      # currently the call graph of this method ensures the class 
+      # will have an accessor name.
+      name = tlv_class.accessor_name
       
-      define_method("#{name}="){|val|
-        self.instance_variable_set("@#{name}", val)
+      define_method("#{name}="){ |val|
+        # must either be an instance of tlv_val
+        # or a raw value.
+        if val.is_a? TLV
+          self.instance_variable_set("@#{name}", val)
+        else
+          v = tlv_class.new
+          # _should_ be a String, but we'll bang anything 
+          # into value for now...
+          v.value = val.to_s
+          self.instance_variable_set("@#{name}", v)
+        end 
       }
+
       define_method("#{name}") {
         self.instance_variable_get("@#{name}") 
       }
-    
+
     end
+
   end
 
 end
