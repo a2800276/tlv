@@ -68,7 +68,7 @@ class TLV
     rest = bytes[length, bytes.length]
 
     while b && b.length != 0
-      tlv, b = self.class.parse(b)
+      tlv, b = self.class._parse(b)
       self.send("#{tlv.class.accessor_name}=", tlv)
     end
 
