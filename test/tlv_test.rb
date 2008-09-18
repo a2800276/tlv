@@ -48,10 +48,12 @@ class TestTLV < Test::Unit::TestCase
     t = TLVTest.new
     basics t
     assert_equal "\x11\x02\x01\xaa", t.to_b
+    assert_equal "\x01\xaa", t.get_bytes
 
     t = TLVTestNoTag.new
     basics t
     assert_equal "\x01\xaa", t.to_b
+    assert_equal t.to_b, t.get_bytes
   end 
 
   def test_parse_tag

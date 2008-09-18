@@ -1,4 +1,12 @@
 class TLV
+  
+  def get_bytes
+    if self.class.primitive?  || (self.is_a?(DGI) && fields.length!=0)
+      bytes = get_bytes_primitive
+    else
+      bytes = get_bytes_constructed
+    end
+  end      
   def get_bytes_primitive
     bytes = ""
     fields.each { |field|
@@ -47,14 +55,7 @@ class TLV
   end
 
   def to_b
-    bytes = ""
-    if self.class.primitive?  || (self.is_a?(DGI) && fields.length!=0)
-      bytes = get_bytes_primitive
-    else
-      bytes = get_bytes_constructed
-    end
-
-
+    bytes = get_bytes
     if tag
       bytes.insert 0, get_len_bytes(bytes.length)
       bytes.insert 0, tag
