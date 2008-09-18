@@ -54,8 +54,16 @@ class TLV
     return len_bytes 
   end
 
+  # this provides an opportunity to manipulate the payload 
+  # before it is assembled. Expects a proc taking the bytes of the 
+  # payload and returning the new version of the bytes.
+  def payload_hook= hook
+    @hook = hook
+  end
+
   def to_b
     bytes = get_bytes
+    bytes = @hook.call(bytes) if @hook
     if tag
       bytes.insert 0, get_len_bytes(bytes.length)
       bytes.insert 0, tag
