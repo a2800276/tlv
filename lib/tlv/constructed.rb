@@ -68,7 +68,7 @@ class TLV
     end
 
     def rubify_a display
-      name = display.gsub(/\s+/, "_")
+      name = display.strip.gsub(/\s+/, "_")
       name = name.downcase.to_sym
     end
 
