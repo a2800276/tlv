@@ -15,9 +15,13 @@ class TLV
     string = string.gsub(/\s+/, "")
     [string].pack("H*") 
   end
+  
+  DEBUG = ENV["DEBUG"] 
 
+  # Outputs a warning in case the enironment
+  # variable `DEBUG` is set.
   def self.warn mes
-    STDERR.puts "[warn] #{mes}"
+    STDERR.puts "[warn] #{mes}" if ENV["DEBUG"]
   end
           
   
