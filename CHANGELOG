@@ -1,5 +1,8 @@
 
 = Version 0.0.1
+=== Tue Nov 18 19:50:18 CET 2008
+* better handling for raw fields
+* `tlv` accepts String or fixnum for tag
 === Wed Jul 23 18:21:18 CEST 2008
 * initial creation 
 
