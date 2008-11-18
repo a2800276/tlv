@@ -1,7 +1,7 @@
 class TLV
   
   def get_bytes
-    if self.class.primitive?  || (self.is_a?(DGI) && fields.length!=0)
+    if self.class.primitive?  || (self.is_a?(DGI) && fields.length!=0) || self.class.is_raw?
       bytes = get_bytes_primitive
     else
       bytes = get_bytes_constructed

@@ -49,7 +49,12 @@ class TLV
     # the name of the accessor, default is the rubyfied display_name
     attr_accessor :accessor_name
     def tlv tag, display_name, accessor_name=nil
-      @tag = TLV.s2b(tag)
+      @tag = case tag
+             when String
+                     TLV.s2b(tag)
+             when Fixnum
+                     TLV.s2b(tag.to_s(16))
+             end
       def @tag.& flag
         self[0] & flag
       end
@@ -71,7 +76,12 @@ class TLV
     end
     
     def raw desc=nil, name=nil
+      @is_raw = true
       fields << Raw.new(self, desc, name)
+    end
+
+    def is_raw?
+      @is_raw == true
     end
 
     # for constructed tlv's, add subtags that must be present
