@@ -13,6 +13,7 @@ class TLV
   end
   def self.s2b string
     string = string.gsub(/\s+/, "")
+    string = "0" + string unless (string.length % 2 == 0)
     [string].pack("H*") 
   end
   
@@ -51,9 +52,9 @@ class TLV
     def tlv tag, display_name, accessor_name=nil
       @tag = case tag
              when String
-                     TLV.s2b(tag)
+               TLV.s2b(tag)
              when Fixnum
-                     TLV.s2b(tag.to_s(16))
+               TLV.s2b("%x" % tag)
              end
       def @tag.& flag
         self[0] & flag

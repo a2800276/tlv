@@ -26,8 +26,13 @@ class TestTLV < Test::Unit::TestCase
     tlv 0x9F71, "Test Fixnum"
     raw
   end
+  class DGITest4 < DGI
+    tlv 0x0101, "Test Fixnum"
+    raw
+  end
+
   class TLVTest5 < TLV
-    tlv "70", "Test Fixnum 2"
+    tlv 0x70, "Test Fixnum 2"
     raw
   end
   class TLVTestNoTag < TLV
@@ -201,6 +206,9 @@ class TestTLV < Test::Unit::TestCase
     t2 = TLVTest5.new
     t2.value = "321"
     assert_equal(TLV.s2b("7003333231"), t2.to_b)
+
+    d = DGITest4.new
+    assert_equal("\x01\x01", d.tag)
   end
 
 
