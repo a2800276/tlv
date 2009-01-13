@@ -11,12 +11,11 @@ class DGI < TLV
     [len, rest]
   end
 
-  def self.check_tag
-    raise "incorrect tag length, dgi must be 2" unless tag.length==2
+  def self.check_tag 
+    raise "incorrect tag length, dgi must be 2 : #{tag}" unless tag.length==2
   end
 
   def self.get_tag bytes
-          puts "HERE!!!"
     tag = bytes[0,2]
     rest = bytes [2,bytes.length]
     [tag, rest]
