@@ -14,6 +14,10 @@ LONG_DESC	= <<END_DESC
 	This is a short project description.
 END_DESC
 RUBYFORGE_USER	='a2800276'
+AUTHOR = "Tim Becker"
+EMAIL  = "tim.becker@kuriositaet.de"
+HOMEPAGE = "http://github.com/a2800276/tlv"
+
 
 # Specifies the default task to execute. This is often the "test" task
 # and we'll change things around as soon as we have some tests.
@@ -79,6 +83,10 @@ spec = Gem::Specification.new do |s|
 	s.requirements << "none"
 	s.require_path = 'lib'
 	s.description = LONG_DESC
+  s.author = AUTHOR
+  s.email = EMAIL
+  s.homepage = HOMEPAGE
+  s.has_rdoc = true
 end
 
 # Adding a new GemPackageTask adds a task named `package`, which generates
