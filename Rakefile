@@ -48,9 +48,37 @@ Rake::RDocTask.new do |rd|
 	# documenation from.
 	rd.rdoc_files.include(	"README", "AUTHORS", "LICENSE", "TODO",
 				"CHANGELOG", "bin/**/*", "lib/**/*.rb", 
-				"examples/**/*rb","test/**/*.rb", "doc/*.rdoc")
+				"examples/**/*rb", "doc/*.rdoc")
 	# This one specifies the output directory ...
 	rd.rdoc_dir 	= "doc/html"
+
+	# Or the HTML title of the generated documentation set.
+	rd.title 	= "#{SHORTNAME}: #{DESC}"
+
+	# These are options specifiying how source code inlined in the
+	# documentation should be formatted.
+	
+	rd.options 	= ["--line-numbers", "--inline-source"]
+
+	# Check:
+	# `rdoc --help` for more rdoc options
+	# the {rdoc documenation home}[http://www.ruby-doc.org/stdlib/libdoc/rdoc/rdoc/index.html]
+	# or the documentation for the +Rake::RDocTask+ task[http://rake.rubyforge.org/classes/Rake/RDocTask.html]
+end
+Rake::RDocTask.new(:rdoc_dev) do |rd|
+	# Options for documenation generation are specified inside of
+	# this block. For example the following line specifies that the
+	# content of the README file should be the main page of the
+	# documenation.
+	rd.main = "README" 
+	
+	# The following line specifies all the files to extract
+	# documenation from.
+	rd.rdoc_files.include(	"README", "AUTHORS", "LICENSE", "TODO",
+				"CHANGELOG", "bin/**/*", "lib/**/*.rb", 
+				"examples/**/*rb","test/**/*.rb", "doc/*.rdoc")
+	# This one specifies the output directory ...
+	rd.rdoc_dir 	= "doc/dev_html"
 
 	# Or the HTML title of the generated documentation set.
 	rd.title 	= "#{SHORTNAME}: #{DESC}"
