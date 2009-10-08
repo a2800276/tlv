@@ -1,13 +1,7 @@
 
-
-class TLV 
-
-#  def self.register tag, clazz
-#    @tlv_classes ||= {}
-#    @tlv_classes[tag] = clazz
-#  end
-
-  def self.b2s bytestr
+module TLV
+  
+	def self.b2s bytestr
     r = bytestr.unpack("H*")[0]
     r.length > 1 ? r : "  "
   end
@@ -16,6 +10,20 @@ class TLV
     string = "0" + string unless (string.length % 2 == 0)
     [string].pack("H*") 
   end
+
+class TLV 
+
+	def self.s2b str
+		::TLV.s2b str
+	end
+	def self.b2s bytes
+		::TLV.b2s bytes
+	end
+#  def self.register tag, clazz
+#    @tlv_classes ||= {}
+#    @tlv_classes[tag] = clazz
+#  end
+
   
   DEBUG = ENV["DEBUG"] 
 
@@ -54,7 +62,7 @@ class TLV
              when String
                TLV.s2b(tag)
              when Fixnum
-               TLV.s2b("%x" % tag)
+               TLV::s2b("%x" % tag)
              end
       def @tag.& flag
         self[0] & flag
@@ -131,4 +139,4 @@ class TLV
   end
 end
 
-
+end # module

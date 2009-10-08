@@ -1,3 +1,4 @@
+module TLV
 class TLV
   # return [tlv, rest], the parsed TLV and any leftover bytes.
   def self.parse bytes
@@ -83,3 +84,4 @@ class TLV
 
 
 end
+end # module

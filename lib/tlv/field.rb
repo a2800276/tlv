@@ -1,3 +1,4 @@
+module TLV
 class TLV
 class Field
   attr_accessor :display_name, :name, :length
@@ -20,3 +21,4 @@ class Field
   end
 end
 end
+end # module

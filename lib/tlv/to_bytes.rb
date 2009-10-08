@@ -1,3 +1,4 @@
+module TLV
 class TLV
   
   def get_bytes
@@ -71,3 +72,5 @@ class TLV
     bytes
   end
 end
+end # module
+

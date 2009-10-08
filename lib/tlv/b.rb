@@ -1,4 +1,4 @@
-
+module TLV
 
 class TLV
  class B < Field
@@ -29,3 +29,4 @@ class TLV
     end
   end
 end
+end # module

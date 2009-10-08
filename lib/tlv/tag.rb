@@ -1,3 +1,4 @@
+module TLV
 class TLV
 
 class << self
@@ -47,3 +48,4 @@ class << self
 
 end        
 end
+end # module

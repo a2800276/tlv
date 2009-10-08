@@ -1,3 +1,4 @@
+module TLV
 class TLV
   class Raw < Field
     def initialize clazz, desc=nil, name=nil, len=0
@@ -27,3 +28,4 @@ class TLV
     end 
   end
 end
+end # module

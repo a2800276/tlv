@@ -2,6 +2,7 @@ require 'test/unit'
 require File.dirname(__FILE__) + '/../lib/tlv'
 
 class TestTLVTag < Test::Unit::TestCase
+	include TLV
 
   def setup
   end

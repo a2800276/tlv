@@ -1,4 +1,4 @@
-
+module TLV
 class DGI < TLV
 
   def self.get_length(bytes)
@@ -37,3 +37,4 @@ class DGI < TLV
     end
   end 
 end
+end # module
