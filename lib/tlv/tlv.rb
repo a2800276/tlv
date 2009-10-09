@@ -2,10 +2,12 @@
 module TLV
   
 	def self.b2s bytestr
+    return "" unless bytestr
     r = bytestr.unpack("H*")[0]
     r.length > 1 ? r : "  "
   end
   def self.s2b string
+    return "" unless string
     string = string.gsub(/\s+/, "")
     string = "0" + string unless (string.length % 2 == 0)
     [string].pack("H*") 
