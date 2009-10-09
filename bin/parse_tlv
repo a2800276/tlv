@@ -2,6 +2,7 @@
 
 
 require 'tlv'
+require 'tlv/parser/dictionaries/dictionaries'
 
 
 USAGE =<<END

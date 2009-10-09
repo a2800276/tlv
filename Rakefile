@@ -155,6 +155,7 @@ Rake::TestTask.new do |t|
 	t.libs << "test" 
 	t.libs << "lib" 
 	t.test_files = FileList['test/*.rb'] 
+	t.ruby_opts = ["-rubygems"]
 	t.verbose = true 
 end
 
