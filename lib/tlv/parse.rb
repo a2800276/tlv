@@ -32,7 +32,7 @@ class TLV
 
     if (len & 0x80) == 0x80     # if MSB set 
       num_bytes = len & 0x0F    # 4 LSB are num bytes total
-      raise "Don't be silly" if num_bytes > 4
+      raise "Don't be silly: #{b2s(bytes)}" if num_bytes > 4
       len = bytes[1,num_bytes]
       len = ("#{"\x00"*(4-num_bytes)}%s" % len).unpack("N")[0]
     end
