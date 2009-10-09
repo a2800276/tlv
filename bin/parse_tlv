@@ -43,9 +43,9 @@ lines = io.readlines
 #  puts TLV.s2b(line)
 #}
 if hex
-  puts TLV.parse_hex(lines.join)
+  puts TLV.parse_hex(lines.join, dict)
 else
-  puts TLV.parse(lines.join)
+  puts TLV.parse(lines.join,dict)
 end
 
 io.close
