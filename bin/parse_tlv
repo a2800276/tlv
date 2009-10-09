@@ -3,18 +3,22 @@
 
 require 'tlv'
 
+
 USAGE =<<END
-usage: parse_tlv [-hex] (file_to_parse | < file_to_parse)
+usage: parse_tlv [-hex] [-dictionaries] [-d dictionary] (file_to_parse | < file_to_parse)
+  -hex          interpred input data as hex
+  -dictionaries list available dictionaries
 END
 
-hex, file = ARGV[0,2]
-if hex == "-hex"
-  hex = true
-  puts hex
-else
-  file = hex if hex
-  hex = false
+hex               = ARGV.delete "-hex"
+list_dictionaries = ARGV.delete "-dictionaries"
+
+if (i = ARGV.index("-d"))
+  dict = TLV::DICTIONARIES[ARGV[i+1]]
+  ARGV.delete_at i
+  ARGV.delete_at i
 end
+file              = ARGV.last
 
 if file 
   unless File.exists?(file) && File.readable?(file)
@@ -23,14 +27,24 @@ if file
   end
 end
 
+if list_dictionaries
+  TLV::DICTIONARIES.each_key{|key|
+    puts key
+  }
+  exit(0)
+end
+
 io = file ? File.open(file) : STDIN
 
+
 lines = io.readlines
-lines.each {|line|
-  puts TLV.s2b(line)
-}
+#lines.each {|line|
+#  puts TLV.s2b(line)
+#}
 if hex
   puts TLV.parse_hex(lines.join)
 else
   puts TLV.parse(lines.join)
 end
+
+io.close

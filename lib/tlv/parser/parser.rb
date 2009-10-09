@@ -4,6 +4,7 @@
 require 'hexy'
 
 module TLV
+  DICTIONARIES = {}
   def self.parse bytes, dictionary={}
     _dump(_parse(bytes), dictionary)
   end
