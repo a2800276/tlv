@@ -9,7 +9,7 @@ require "rubygems"
 
 SHORTNAME	='tlv'	# this should be the rubyforge project name
 DESC		='lib for handling tlv data'
-PKG_VERSION 	='0.0.1'
+PKG_VERSION 	='0.0.2'
 LONG_DESC	= <<END_DESC
 	This is a short project description.
 END_DESC
@@ -105,6 +105,7 @@ PKG_FILES 	= FileList['lib/**/*.rb', 'bin/**/*', 'examples/**/*', '[A-Z]*', 'tes
 spec = Gem::Specification.new do |s|
 	s.platform = Gem::Platform::RUBY
 	s.summary = "#{SHORTNAME}: #{DESC}"
+	s.add_dependency "hexy"
 	s.name = SHORTNAME
 	s.version = PKG_VERSION
 	s.files = PKG_FILES
@@ -115,6 +116,7 @@ spec = Gem::Specification.new do |s|
   s.email = EMAIL
   s.homepage = HOMEPAGE
   s.has_rdoc = true
+	s.executables = ["parse_tlv", "parse_dgi"]
 end
 
 # Adding a new GemPackageTask adds a task named `package`, which generates

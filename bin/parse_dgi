@@ -1,0 +1,36 @@
+#!/usr/bin/env ruby
+
+
+require 'tlv'
+
+USAGE =<<END
+usage: parse_tlv [-hex] (file_to_parse | < file_to_parse)
+END
+
+hex, file = ARGV[0,2]
+if hex == "-hex"
+  hex = true
+else
+  file = hex if hex
+  hex = false
+end
+
+if file 
+  unless File.exists?(file) && File.readable?(file)
+    STDERR.puts USAGE
+    exit(1)
+  end
+end
+
+io = file ? File.open(file) : STDIN
+
+lines = io.readlines
+#lines.each {|line|
+#  puts TLV.s2b(line)+"<<<<<"
+#  puts line
+#}
+if hex
+  puts TLV.parse_dgi_hex(lines.join)
+else
+  puts TLV.parse_dgi(lines.join)
+end
