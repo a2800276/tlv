@@ -1,5 +1,5 @@
-require "rake/rdoctask"
-require "rake/gempackagetask"
+require "rdoc/task"
+require "rubygems/package_task"
 require "rake/testtask"
 require "rake/clean"
 require "rubygems"
@@ -7,16 +7,16 @@ require "rubygems"
 # Some definitions that you'll need to edit in case you reuse this
 # Rakefile for your own project.
 
-SHORTNAME	='tlv'	# this should be the rubyforge project name
-DESC		='lib for handling tlv data'
-PKG_VERSION 	='0.0.2'
+SHORTNAME	      ='tlv'	# this should be the rubyforge project name
+DESC		        ='lib for handling tlv data'
+PKG_VERSION 	  ='0.0.3'
 LONG_DESC	= <<END_DESC
-	This is a short project description.
+  lib for handling tlv (der) and dgi encoded data	
 END_DESC
 RUBYFORGE_USER	='a2800276'
-AUTHOR = "Tim Becker"
-EMAIL  = "tim.becker@kuriositaet.de"
-HOMEPAGE = "http://github.com/a2800276/tlv"
+AUTHOR          = "Tim Becker"
+EMAIL           = "tim@kuriositaet.de"
+HOMEPAGE        = "http://github.com/a2800276/tlv"
 
 
 # Specifies the default task to execute. This is often the "test" task
@@ -121,7 +121,7 @@ end
 
 # Adding a new GemPackageTask adds a task named `package`, which generates
 # packages as gems, tarball and zip archives.
-Rake::GemPackageTask.new(spec) do |pkg|
+Gem::PackageTask.new(spec) do |pkg|
 	pkg.need_zip = true
 	pkg.need_tar_gz = true
 end
